@@ -21,11 +21,12 @@ function init() {
 
   // scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0x332044 );
+  //scene.background = new THREE.Color( 0x332044 );
+  scene.background = new THREE.Color( 0xFFFFFF );
 
   // camera
-  camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.set( 0, 0, 1000 );
+  camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.set( 0, 0, 500 );
 
   // lights
   scene.add( new THREE.AmbientLight( 0x666666 ) );
