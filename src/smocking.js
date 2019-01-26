@@ -1,36 +1,48 @@
-var gridSize = 20;
-var halfGrid = gridSize/2;
-var quarterGrid = ~~(gridSize/4);
-var xSegs = 400;
-var ySegs = 400;
-var numOfTilesInRow = xSegs/gridSize;
+import * as dat from 'dat.gui';
+
+var settings = new function() {
+  this.gridSize = 20;
+  this.halfGrid = this.gridSize/2;
+  this.quarterGrid = ~~(this.gridSize/4);
+  this.xSegs = 400;
+  this.ySegs = 400;
+  this.upperLimit = this.xSegs * this.ySegs;
+  this.numOfTilesInRow = this.xSegs/this.gridSize;
+  this.layout = 0;
+};
+
+// Look at constraints and how they relate to the stretch of the fabric as well as segs
 
 // Our fabric is square so the number of tiles in a row is the same as in a column
-var numOfCornersPerRow = xSegs+1;
-var totalTiles = numOfTilesInRow*numOfTilesInRow;
+
+var gui = new dat.GUI();
+gui.add(settings, 'layout', 0, 2).step(1);
+
+var numOfCornersPerRow = settings.xSegs+1;
+var totalTiles = settings.numOfTilesInRow*settings.numOfTilesInRow;
 
 function getRowBasedOnTileNumber(tileNumber) {
-  return Math.floor(tileNumber/numOfTilesInRow);
+  return Math.floor(tileNumber/settings.numOfTilesInRow);
 }
 
 function getColumnBasedOnTileNumber(tileNumber) {
-  return tileNumber%numOfTilesInRow + 1;
+  return tileNumber%settings.numOfTilesInRow + 1;
 }
 
 function getTileCorners(tileNumber) {
   var row = getRowBasedOnTileNumber(tileNumber);
   var column = getColumnBasedOnTileNumber(tileNumber);
-  var offset = gridSize*numOfCornersPerRow;
-  var topRightCorner = column*gridSize + row*offset;
-  var topLeftCorner = topRightCorner - gridSize;
+  var offset = settings.gridSize*numOfCornersPerRow;
+  var topRightCorner = column*settings.gridSize + row*offset;
+  var topLeftCorner = topRightCorner - settings.gridSize;
   var bottomLeftCorner = topLeftCorner + offset;
-  var bottomRightCorner = bottomLeftCorner + gridSize;
-  var center = topLeftCorner + halfGrid + (halfGrid*numOfCornersPerRow); 
+  var bottomRightCorner = bottomLeftCorner + settings.gridSize;
+  var center = topLeftCorner + settings.halfGrid + (settings.halfGrid*numOfCornersPerRow); 
   
   // Supports for the diagonalTopToBotton Compression Method
-  var cOffset = quarterGrid*numOfCornersPerRow;
-  var negAdjustOffset = -cOffset + quarterGrid;
-  var posAdjustOffset = cOffset - quarterGrid;
+  var cOffset = settings.quarterGrid*numOfCornersPerRow;
+  var negAdjustOffset = -cOffset + settings.quarterGrid;
+  var posAdjustOffset = cOffset - settings.quarterGrid;
 
   var tlcSupport1 = topLeftCorner + negAdjustOffset;
   var tlcSupport2 = topLeftCorner + posAdjustOffset;
@@ -42,8 +54,8 @@ function getTileCorners(tileNumber) {
   var tlcBrcSupportCenter2 = center + posAdjustOffset;
 
   // Supports for the diagonalBottomToTop Compression Method
-  var negAdjustOffset2 = -cOffset - quarterGrid;
-  var posAdjustOffset2 = cOffset + quarterGrid;
+  var negAdjustOffset2 = -cOffset - settings.quarterGrid;
+  var posAdjustOffset2 = cOffset + settings.quarterGrid;
 
   var trcSupport1 = topRightCorner + negAdjustOffset2;
   var trcSupport2 = topRightCorner + posAdjustOffset2
@@ -100,19 +112,29 @@ function compressionMethodDetails(compressionMethod, corners) {
   var center = corners.mainCorners.center;
 
   // change these to an object, add the compression method, check compression method in the loop at the bottom to determine offset direction
-  var accrossTop  = [center, topLeft, topRight];
-  var downLeftSide = [center, topLeft, bottomLeft];
+  var accrossTop  = {
+    mainCorners: [center, topLeft, topRight],
+  }
+
+  var downLeftSide = {
+    mainCorners: [center, topLeft, bottomLeft],
+  }
+
   var diagonalTopToBottom = {
     mainCorners: [center, topLeft, bottomRight],
-    support1: corners.supportCorners.diagonalTopToBottom.upperSupport,
-    support2: corners.supportCorners.diagonalTopToBottom.lowerSupport,
+    //support1: corners.supportCorners.diagonalTopToBottom.upperSupport,
+    //support2: corners.supportCorners.diagonalTopToBottom.lowerSupport,
   };
+
   var diagonalBottomToTop = {
     mainCorners: [center, bottomLeft, topRight],
-    support1: corners.supportCorners.diagonalBottomToTop.upperSupport,
-    support2: corners.supportCorners.diagonalBottomToTop.lowerSupport
+    //support1: corners.supportCorners.diagonalBottomToTop.upperSupport,
+    //support2: corners.supportCorners.diagonalBottomToTop.lowerSupport
   };
-  var topAndLeftSide = [center, topLeft, topRight, bottomLeft];
+
+  var topAndLeftSide = {
+    mainCorners: [center, topLeft, topRight, bottomLeft],
+  }
 
   var compressionMethods = {
     accrossTop: accrossTop,
@@ -125,34 +147,101 @@ function compressionMethodDetails(compressionMethod, corners) {
   return compressionMethods[compressionMethod];
 }
 
-var cornersPerTile = [];
+//var cornersPerTile = experimental()
 
-//Redo smocking grid generation. Compare to smocked fabric to ensure it is correct.
-for (var tile = numOfTilesInRow+1; tile < totalTiles-2; tile ++) {
-  var currentRow = getRowBasedOnTileNumber(tile) + 1;
-  var currentColumn = getColumnBasedOnTileNumber(tile);
-  
-  if (currentColumn > 1 && currentColumn < numOfTilesInRow && currentRow > 1 && currentRow < numOfTilesInRow) {
-    var method;
-    var mod = 0;
-    if ((currentRow)%2 === 0) {
-      method = 'diagonalBottomToTop';
-      mod = 0;
-    } else {
-      method = 'diagonalTopToBottom';
-      mod = 1;
-    }
+function classicCanadian() {
+  var tileDetails = [];
 
-    if ((tile+mod)%2 == 0) {
-      cornersPerTile.push(compressionMethodDetails(method , getTileCorners(tile)));
+  for (var tile = settings.numOfTilesInRow+1; tile < totalTiles-2; tile ++) {
+    var currentRow = getRowBasedOnTileNumber(tile) + 1;
+    var currentColumn = getColumnBasedOnTileNumber(tile);
+    
+    if (currentColumn > 1 && currentColumn < settings.numOfTilesInRow && currentRow > 1 && currentRow < settings.numOfTilesInRow) {
+      var method;
+      var mod = 0;
+      if ((currentRow)%2 === 0) {
+        method = 'diagonalBottomToTop';
+        mod = 0;
+      } else {
+        method = 'diagonalTopToBottom';
+        mod = 1;
+      }
+
+      if ((tile+mod)%2 == 0) {
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      }
     }
   }
+
+  return tileDetails;
+}
+
+function classicWave() {
+  var tileDetails = [];
+
+  for (var tile = ~~settings.numOfTilesInRow+1; tile < totalTiles-2; tile ++) {
+    var currentRow = getRowBasedOnTileNumber(tile) + 1;
+    var currentColumn = getColumnBasedOnTileNumber(tile);
+    
+    if (currentColumn > 1 && currentColumn < settings.numOfTilesInRow && currentRow > 1 && currentRow < settings.numOfTilesInRow) {
+
+      var method;
+      if ((tile)%4 === 0) {
+        method = 'diagonalBottomToTop';
+      } else if ((tile-2)%4 === 0) {
+        method = 'diagonalTopToBottom';
+      }
+
+      if ((tile)%2 == 0) {
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      }
+    }
+  }
+
+  return tileDetails;
+
+}
+
+function experimental() {
+  var tileDetails = [];
+
+  for (var tile = settings.numOfTilesInRow+1; tile < totalTiles-1; tile ++) {
+    var currentRow = getRowBasedOnTileNumber(tile) + 1;
+    var currentColumn = getColumnBasedOnTileNumber(tile);
+    
+    if (currentColumn > 1 && currentColumn < settings.numOfTilesInRow && currentRow > 1 && currentRow <= settings.numOfTilesInRow) {
+      var method;
+      var mod;
+
+      if (currentRow%2 === 0) {
+        mod = 3;
+      } else {
+        mod = 0;
+      }
+
+      if ((currentColumn+mod)%6 === 0) {
+        method = 'diagonalTopToBottom';
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      } 
+      
+      if ((currentColumn+mod+4)%6 === 0) {
+        method = 'diagonalBottomToTop';
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      }
+
+    }
+  }
+  return tileDetails;
 }
 
 
-var cornersPerTileLength = cornersPerTile.length;
+//var cornersPerTileLength = cornersPerTile.length;
+var layoutArray = [experimental(), classicCanadian(), classicWave()];
 
 function updateParticles(particles) {
+
+  var cornersPerTile = layoutArray[settings.layout];
+  var cornersPerTileLength = cornersPerTile.length;
 
   for (var tile = 0; tile < cornersPerTileLength; tile++) {
     //var tileDetails = cornersPerTile[tile].mainCorners;
@@ -161,14 +250,13 @@ function updateParticles(particles) {
     for (var key in tileDetails) {
       var cornersArray = tileDetails[key];
       var pCenter = particles[cornersArray[0]];
-      if (cornersArray[1] > 0 && cornersArray[2] < 160000) {
+      if (cornersArray[1] > 0 && cornersArray[2] < settings.upperLimit) {
         var p1 = particles[cornersArray[1]];
         var p2 = particles[cornersArray[2]];
         
         var pCenterV = pCenter.original.clone(pCenter.original.x, pCenter.original.y, 0);
 
         if (p2 == undefined) {
-          console.log(cornersArray[2], 'what the hell');
         }
 
         pCenterV.set(pCenterV.x, pCenterV.y, -5);
@@ -184,4 +272,4 @@ function updateParticles(particles) {
   } 
 }
 
-export { xSegs, ySegs, updateParticles }
+export { settings, updateParticles }

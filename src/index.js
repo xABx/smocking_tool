@@ -26,7 +26,7 @@ function init() {
 
   // camera
   camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.set( 0, 0, 500 );
+  camera.position.set( 0, 0, 300 );
 
   // lights
   scene.add( new THREE.AmbientLight( 0x666666 ) );
@@ -44,6 +44,21 @@ function init() {
   light.shadow.camera.far = 1000;
   scene.add( light );
   
+  var light2 = new THREE.DirectionalLight( 0xdfebff, 1 );
+  light2.position.set( 50, 200, -100 );
+  light2.position.multiplyScalar( 1.3 );
+  light2.castShadow = true;
+  light2.shadow.mapSize.width = 1024;
+  light2.shadow.mapSize.height = 1024;
+  var d2 = 300;
+  light2.shadow.camera.left =  d;
+  light2.shadow.camera.right = d;
+  light2.shadow.camera.top = d;
+  light2.shadow.camera.bottom = - d;
+  light2.shadow.camera.far = 1000;
+
+  scene.add( light2 );
+
   // cloth material
   var loader = new THREE.TextureLoader();
   var clothTexture = loader.load( Circuit );

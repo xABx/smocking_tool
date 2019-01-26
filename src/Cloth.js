@@ -10,26 +10,24 @@
 // http://cg.alexandra.dk/tag/spring-mass-system/
 // Real-time Cloth Animation http://www.darwin3d.com/gamedev/articles/col0599.pdf
 
-import { xSegs, ySegs, updateParticles } from './smocking.js';
+import { settings, updateParticles } from './smocking.js';
 
 var DAMPING = 0.03;
 var DRAG = 1 - DAMPING;
 var MASS = 0.0001;
 var restDistance = 0.5;
 
-var clothFunction = plane( restDistance * xSegs, restDistance * ySegs );
+var clothFunction = plane( restDistance * settings.xSegs, restDistance * settings.ySegs );
 
-var cloth = new Cloth( xSegs, ySegs );
+var cloth = new Cloth( settings.xSegs, settings.ySegs );
 
 //var GRAVITY = 981 * 1.4;
-var GRAVITY = 40;
+var GRAVITY = 10;
 var gravity = new THREE.Vector3( 0, 0, GRAVITY ).multiplyScalar( MASS );
 
 
 var TIMESTEP = 18 / 1000;
 var TIMESTEP_SQ = TIMESTEP * TIMESTEP;
-
-var tmpForce = new THREE.Vector3();
 
 var lastTime;
 
