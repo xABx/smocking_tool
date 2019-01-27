@@ -1,6 +1,5 @@
 body {
   font-family: Monospace;
-  background-color: #000;
   color: #000;
   margin: 0px;
   overflow: hidden;
@@ -16,4 +15,35 @@ body {
 a {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.interface-container {
+  opacity: 0.2;
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  border: 1px solid black;
+  p {
+    padding-left: 20px;
+  }
+}
+
+.interface {
+  width: 400px;
+  height: 400px;
+}
+
+.tile {
+  border: 1px solid lightgrey;
+  float: left;
+}
+
+[data-state="diagonalBottomToTop"] {
+  background: url('../images/diagonalBottomToTop.png');
+  background-size: 100% 100%;
+}
+
+[data-state="diagonalTopToBottom"] {
+  background: url('../images/diagonalTopToBottom.png');
+  background-size: 100% 100%;
 }

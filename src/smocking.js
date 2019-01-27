@@ -234,9 +234,28 @@ function experimental() {
   return tileDetails;
 }
 
+var layoutArray = [experimental(), classicCanadian(), classicWave()];
+
+function parseInterfaceGrid(tileAndCompressionMethodArray) {
+  var lengthOfArray = tileAndCompressionMethodArray.length;
+  var cornersPerTileTemp = [];
+
+
+  for (var t = 0; t < lengthOfArray; t++) {
+    var tileData = tileAndCompressionMethodArray[t];
+    cornersPerTileTemp.push(compressionMethodDetails(tileData.compressionMethod, getTileCorners(tileData.tileNumber)));
+  }
+
+  if (layoutArray.length === 3) {
+    layoutArray.push(cornersPerTileTemp);
+  } else {
+    layoutArray.splice(-1, 1);
+    layoutArray.push(cornersPerTileTemp);
+  }
+  settings.layout = 3;
+}
 
 //var cornersPerTileLength = cornersPerTile.length;
-var layoutArray = [experimental(), classicCanadian(), classicWave()];
 
 function updateParticles(particles) {
 
@@ -272,4 +291,4 @@ function updateParticles(particles) {
   } 
 }
 
-export { settings, updateParticles }
+export { settings, updateParticles, parseInterfaceGrid }

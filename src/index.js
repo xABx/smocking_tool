@@ -5,6 +5,7 @@ import { cloth, clothFunction, ballSize, simulate } from './Cloth.js';
 import OrbitControls from './OrbitControls.js';
 import Grass from './images/grasslight-big.jpg';
 import Circuit from './images/circuit_pattern.png';
+import {settings, parseInterfaceGrid} from './smocking.js';
 
 if ( WEBGL.isWebGLAvailable() === false ) {
   document.body.appendChild( WEBGL.getWebGLErrorMessage() );
@@ -122,4 +123,68 @@ function render() {
   clothGeometry.attributes.position.needsUpdate = true;
   clothGeometry.computeVertexNormals();
   renderer.render( scene, camera );
+}
+
+// Grid Interface
+var domTile = document.getElementsByClassName('tile');
+var totalTilesForDom = settings.numOfTilesInRow*settings.numOfTilesInRow;
+var domInterface = document.getElementsByClassName('interface')[0];
+var interfaceWidth = domInterface.offsetWidth;
+var tileWidth = (interfaceWidth/settings.numOfTilesInRow)-2;
+var diagonalLength = Math.sqrt((2*(tileWidth*tileWidth)));
+
+document.addEventListener('click', function (event) {
+	event.preventDefault();
+  
+  if (event.target.matches('.calculate-grid')) {
+    calculateTiles();
+  } else if (event.target.matches('.clear-grid')) { 
+    clearTiles();
+  } else if (event.target.matches('.tile')) { 
+    toggleTile(event.target);
+  } else {
+    return;
+  }
+
+}, false);
+
+for (var t = 1; t <= totalTilesForDom; t++) {
+  var createdTile = document.createElement('div');
+  createdTile.style.width = tileWidth+'px';
+  createdTile.style.height = tileWidth+'px';
+  createdTile.className += "tile";
+  createdTile.setAttribute('data-tilenumber', t);
+  createdTile.setAttribute('data-state', 'blank');
+  domInterface.appendChild(createdTile);
+}
+
+function toggleTile(target) {
+  if (target.getAttribute('data-state') === 'blank') {
+    target.setAttribute('data-state', 'diagonalTopToBottom');
+  } else if (target.getAttribute('data-state') === 'diagonalTopToBottom') {
+    target.setAttribute('data-state', 'diagonalBottomToTop');
+  } else if (target.getAttribute('data-state') === 'diagonalBottomToTop') {
+    target.setAttribute('data-state', 'blank');
+  }
+}
+
+function clearTiles() {
+  for (var t = 0; t < totalTilesForDom; t++) {
+    domTile[t].setAttribute('data-state', 'blank');
+  }
+}
+
+function calculateTiles() {
+  var tileAndCompressionMethod = [];
+  for (var t = 0; t < totalTilesForDom; t++) {
+    var compressionMethod = domTile[t].getAttribute('data-state');
+    if (compressionMethod !== 'blank') {
+      tileAndCompressionMethod.push({
+        tileNumber: domTile[t].getAttribute('data-tilenumber'), 
+        compressionMethod: domTile[t].getAttribute('data-state')
+      });
+    }
+  }
+  console.log(tileAndCompressionMethod, 'this is the comp method');
+  parseInterfaceGrid(tileAndCompressionMethod);
 }
