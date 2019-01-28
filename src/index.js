@@ -125,7 +125,7 @@ function render() {
   renderer.render( scene, camera );
 }
 
-// Grid Interface
+// Setup Grid Interface
 var domTile = document.getElementsByClassName('tile');
 var totalTilesForDom = settings.numOfTilesInRow*settings.numOfTilesInRow;
 var domInterface = document.getElementsByClassName('interface')[0];
