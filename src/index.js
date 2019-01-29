@@ -150,12 +150,12 @@ document.addEventListener('click', function (event) {
 
 }, false);
 
-for (var t = 1; t <= totalTilesForDom; t++) {
+for (var t = 0; t < totalTilesForDom; t++) {
   var createdTile = document.createElement('div');
   createdTile.style.width = tileWidth+'px';
   createdTile.style.height = tileWidth+'px';
   createdTile.className += "tile";
-  createdTile.setAttribute('data-tilenumber', t);
+  createdTile.setAttribute('data-tilenumber', 400-t);
   createdTile.setAttribute('data-state', 'blank');
   domInterface.appendChild(createdTile);
 }
