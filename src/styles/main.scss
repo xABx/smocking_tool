@@ -47,7 +47,7 @@ button {
 
 .hide-interface {
   height: 18px;
-  .interface, .clear-grid, .calculate-grid, p {
+  .interface, .clear-grid, .calculate-grid, p, .compressionMethods {
     opacity: 0;
   }
 }
@@ -58,11 +58,44 @@ button {
 }
 
 [data-state="diagonalBottomToTop"] {
-  background: url('../images/diagonalBottomToTop.png');
+  background: url('../images/diagonalBottomToTop.jpg');
   background-size: 100% 100%;
 }
 
 [data-state="diagonalTopToBottom"] {
-  background: url('../images/diagonalTopToBottom.png');
+  background: url('../images/diagonalTopToBottom.jpg');
   background-size: 100% 100%;
 }
+
+[data-state="acrossTop"] {
+  background: url('../images/acrossTop.jpg');
+  background-size: 100% 100%;
+}
+
+
+[data-state="topAndLeftSide"] {
+  background: url('../images/topAndLeftSide.jpg');
+  background-size: 100% 100%;
+}
+
+[data-state="downLeftSide"] {
+  background: url('../images/downLeftSide.jpg');
+  background-size: 100% 100%;
+}
+
+.input-hidden {
+   position: absolute;
+   left: -9999px;
+}
+
+input[type=radio]:checked + label>img {
+  box-shadow: 0 0 2px 2px #AAAAFF;
+}
+
+.compressionMethods {
+  text-align: center;
+  label > img {
+    width: 24px;
+  }
+}
+

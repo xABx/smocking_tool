@@ -14,6 +14,7 @@ var container;
 var camera, scene, renderer;
 var clothGeometry;
 var object;
+var chosenCompressionMethod = 'diagonalTopToBottom';
 init();
 animate();
 function init() {
@@ -134,18 +135,23 @@ var tileWidth = (interfaceWidth/settings.numOfTilesInRow)-2;
 var diagonalLength = Math.sqrt((2*(tileWidth*tileWidth)));
 
 document.addEventListener('click', function (event) {
-	event.preventDefault();
-  
-  if (event.target.matches('.calculate-grid')) {
-    calculateTiles();
-  } else if (event.target.matches('.hide-show-grid')) {
-    hideShowGrid();
-  } else if (event.target.matches('.clear-grid')) { 
-    clearTiles();
-  } else if (event.target.matches('.tile')) { 
-    toggleTile(event.target);
+  if (event.target.matches('.radio-toggle')) {
+    if (event.target.matches('input')) {
+      setCompressionMethod(event.target.getAttribute('id'));
+    }
   } else {
-    return;
+    event.preventDefault();
+    if (event.target.matches('.calculate-grid')) {
+      calculateTiles();
+    } else if (event.target.matches('.hide-show-grid')) {
+      hideShowGrid();
+    } else if (event.target.matches('.clear-grid')) { 
+      clearTiles();
+    } else if (event.target.matches('.tile')) { 
+      toggleTile(event.target);
+    } else {
+      return;
+    }
   }
 
 }, false);
@@ -161,13 +167,7 @@ for (var t = 0; t < totalTilesForDom; t++) {
 }
 
 function toggleTile(target) {
-  if (target.getAttribute('data-state') === 'blank') {
-    target.setAttribute('data-state', 'diagonalTopToBottom');
-  } else if (target.getAttribute('data-state') === 'diagonalTopToBottom') {
-    target.setAttribute('data-state', 'diagonalBottomToTop');
-  } else if (target.getAttribute('data-state') === 'diagonalBottomToTop') {
-    target.setAttribute('data-state', 'blank');
-  }
+  target.setAttribute('data-state', chosenCompressionMethod);
 }
 
 function clearTiles() {
@@ -188,6 +188,10 @@ function calculateTiles() {
     }
   }
   parseInterfaceGrid(tileAndCompressionMethod);
+}
+
+function setCompressionMethod(compMethod) {
+  chosenCompressionMethod = compMethod;
 }
 
 function hideShowGrid() {
