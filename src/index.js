@@ -138,6 +138,8 @@ document.addEventListener('click', function (event) {
   
   if (event.target.matches('.calculate-grid')) {
     calculateTiles();
+  } else if (event.target.matches('.hide-show-grid')) {
+    hideShowGrid();
   } else if (event.target.matches('.clear-grid')) { 
     clearTiles();
   } else if (event.target.matches('.tile')) { 
@@ -185,6 +187,14 @@ function calculateTiles() {
       });
     }
   }
-  console.log(tileAndCompressionMethod, 'this is the comp method');
   parseInterfaceGrid(tileAndCompressionMethod);
+}
+
+function hideShowGrid() {
+  var el = document.getElementsByClassName('interface-container')[0];
+  if (el.className.match('hide-interface')) {
+  el.className = 'interface-container';
+  } else {
+    el.className = 'interface-container hide-interface';
+  }
 }

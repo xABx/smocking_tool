@@ -16,7 +16,7 @@ var settings = new function() {
 // Our fabric is square so the number of tiles in a row is the same as in a column
 
 var gui = new dat.GUI();
-gui.add(settings, 'layout', 0, 2).step(1);
+gui.add(settings, 'layout', 0, 3).step(1);
 
 var numOfCornersPerRow = settings.xSegs+1;
 var totalTiles = settings.numOfTilesInRow*settings.numOfTilesInRow;
@@ -112,7 +112,7 @@ function compressionMethodDetails(compressionMethod, corners) {
   var center = corners.mainCorners.center;
 
   // change these to an object, add the compression method, check compression method in the loop at the bottom to determine offset direction
-  var accrossTop  = {
+  var acrossTop  = {
     mainCorners: [center, topLeft, topRight],
   }
 
@@ -137,7 +137,7 @@ function compressionMethodDetails(compressionMethod, corners) {
   }
 
   var compressionMethods = {
-    accrossTop: accrossTop,
+    acrossTop: acrossTop,
     downLeftSide: downLeftSide,
     diagonalTopToBottom: diagonalTopToBottom,
     diagonalBottomToTop: diagonalBottomToTop,
@@ -147,7 +147,6 @@ function compressionMethodDetails(compressionMethod, corners) {
   return compressionMethods[compressionMethod];
 }
 
-//var cornersPerTile = experimental()
 
 function classicCanadian() {
   var tileDetails = [];
@@ -202,7 +201,7 @@ function classicWave() {
 
 }
 
-function experimental() {
+function classicShell() {
   var tileDetails = [];
 
   for (var tile = settings.numOfTilesInRow+1; tile < totalTiles-1; tile ++) {
@@ -234,7 +233,39 @@ function experimental() {
   return tileDetails;
 }
 
-var layoutArray = [experimental(), classicCanadian(), classicWave()];
+function experimental() {
+  var tileDetails = [];
+
+  for (var tile = settings.numOfTilesInRow+1; tile < totalTiles-1; tile ++) {
+    var currentRow = getRowBasedOnTileNumber(tile) + 1;
+    var currentColumn = getColumnBasedOnTileNumber(tile);
+    
+    if (currentColumn > 1 && currentColumn < settings.numOfTilesInRow && currentRow > 1 && currentRow <= settings.numOfTilesInRow) {
+      var method;
+      var mod;
+
+      if (currentRow%2 === 0) {
+        mod = 3;
+      } else {
+        mod = 0;
+      }
+
+      if ((currentColumn+mod)%6 === 0) {
+        method = 'acrossTop';
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      } 
+      
+      if ((currentColumn+mod+4)%6 === 0) {
+        method = 'topAndLeftSide';
+        tileDetails.push(compressionMethodDetails(method , getTileCorners(tile)));
+      }
+
+    }
+  }
+  return tileDetails;
+}
+
+var layoutArray = [experimental(), classicShell(), classicCanadian(), classicWave()];
 
 function parseInterfaceGrid(tileAndCompressionMethodArray) {
   var lengthOfArray = tileAndCompressionMethodArray.length;
@@ -272,11 +303,9 @@ function updateParticles(particles) {
       if (cornersArray[1] > 0 && cornersArray[2] < settings.upperLimit) {
         var p1 = particles[cornersArray[1]];
         var p2 = particles[cornersArray[2]];
-        
-        var pCenterV = pCenter.original.clone(pCenter.original.x, pCenter.original.y, 0);
+        var p3 = particles[cornersArray[3]]; 
 
-        if (p2 == undefined) {
-        }
+        var pCenterV = pCenter.original.clone(pCenter.original.x, pCenter.original.y, 0);
 
         pCenterV.set(pCenterV.x, pCenterV.y, -5);
 
@@ -285,9 +314,13 @@ function updateParticles(particles) {
 
         p2.position.copy(pCenterV);
         p2.previous.copy(pCenterV);
+
+        if (p3) {
+          p3.position.copy(pCenterV);
+          p3.previous.copy(pCenterV);
+        }
       }
     }
-    //this is for two points only right now
   } 
 }
 

@@ -19,6 +19,7 @@ a {
 
 .interface-container {
   position: fixed;
+  width: 400px;
   z-index: 1000;
   background: white;
   border: 1px solid black;
@@ -27,9 +28,22 @@ a {
   }
 }
 
+.hide-show-grid {
+  width: 100%;
+  border-radius: 0;
+  background: black;
+  color: white;
+}
+
 .interface {
   width: 400px;
   height: 400px;
+}
+
+.hide-interface {
+  .interface, .clear-grid, .calculate-grid, p {
+    display: none;
+  }
 }
 
 .tile {
