@@ -38,11 +38,17 @@ a {
 .interface {
   width: 400px;
   height: 400px;
+  opacity: 1;
+}
+
+button {
+  opacity: 1;
 }
 
 .hide-interface {
+  height: 0px;
   .interface, .clear-grid, .calculate-grid, p {
-    display: none;
+    opacity: 0;
   }
 }
 
