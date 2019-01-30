@@ -140,14 +140,17 @@ document.addEventListener('click', function (event) {
       setCompressionMethod(event.target.getAttribute('id'));
     }
   } else {
-    event.preventDefault();
     if (event.target.matches('.calculate-grid')) {
+      event.preventDefault();
       calculateTiles();
     } else if (event.target.matches('.hide-show-grid')) {
+      event.preventDefault();
       hideShowGrid();
     } else if (event.target.matches('.clear-grid')) { 
+      event.preventDefault();
       clearTiles();
     } else if (event.target.matches('.tile')) { 
+      event.preventDefault();
       toggleTile(event.target);
     } else {
       return;
@@ -167,7 +170,11 @@ for (var t = 0; t < totalTilesForDom; t++) {
 }
 
 function toggleTile(target) {
-  target.setAttribute('data-state', chosenCompressionMethod);
+  if (target.getAttribute('data-state') === chosenCompressionMethod) {
+    target.setAttribute('data-state', 'blank');
+  } else {
+    target.setAttribute('data-state', chosenCompressionMethod);
+  }
 }
 
 function clearTiles() {
