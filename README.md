@@ -17,6 +17,6 @@ https://aaronbrocken.com/tech/math/art/2018/12/29/Digital-Textile-Manipulation-P
 ### What are the plans for the future
 The next iterations of this will work on changing up the interface to make it more efficient to use. This will include:
 
-* Support for dong part of the grid and repeating it to avoid having to fill in the entire grid with a repeated pattern by hand
+* Support for doing part of the grid and repeating it to avoid having to fill in the entire grid with a repeated pattern by hand
 * Offsetting the the grid points as areas are "sewn" to reduce the stretch of the fabric that you wouldn't have in the real world
 * Add print styles so you can print your grids that you like and keep them for when you want to actually sew the pattern
