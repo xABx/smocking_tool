@@ -189,7 +189,7 @@ function calculateTiles() {
     var compressionMethod = domTile[t].getAttribute('data-state');
     if (compressionMethod !== 'blank') {
       tileAndCompressionMethod.push({
-        tileNumber: domTile[t].getAttribute('data-tilenumber'), 
+        tileNumber: domTile[t].getAttribute('data-tilenumber')-1, 
         compressionMethod: domTile[t].getAttribute('data-state')
       });
     }

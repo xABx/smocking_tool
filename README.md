@@ -1,5 +1,15 @@
 # Smocking Tool
 
+### Demo
+
+You can find the demo site at https://aaronbrocken.com/smocking-tool
+
+You can use the dat.gui at the top right to cycle through 4 settings. These include 3 presets of popular grids and a 4th setting that recalls the last calculated grid on the interface to the left of the screen.
+
+You can create grids in the interface and use "calculate grid" to see the results on the fabric. The grid matches the fabric when it is flipped over as the grid provides the guide for sewing and the back of the fabric shows you where the points are joined.
+
+You can also move the fabric using the arrow keys, zoom in and out by scrolling, and flip the fabric over by clicking and dragging. 
+
 ### What is this?
 
 This is what happens when a developer gets obsessed with sewing. This is a proof of concept to create a tool that helps with modeling smocking grids virtually. It allows a user to create smocking grids on their own through the use of an interface. This way, you can experiment with different grid patterns before going to the trouble of sewing them. This repo is also a handy dandy way of getting set up with three.js and webpack if you aren't particularly interested in sewing. Just clone and you are good to go :)
