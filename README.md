@@ -4,6 +4,10 @@
 
 This is what happens when a developer gets obsessed with sewing. This is a proof of concept to create a tool that helps with modeling smocking grids virtually. It allows a user to create smocking grids on their own through the use of an interface. This way, you can experiment with different grid patterns before going to the trouble of sewing them. This repo is also a handy dandy way of getting set up with three.js and webpack if you aren't particularly interested in sewing. Just clone and you are good to go :)
 
+For some documentation on what this project is for and what smocking is, check out this blog post:
+
+https://aaronbrocken.com/tech/math/art/2018/12/29/Digital-Textile-Manipulation-Part-1.html
+
 ### What did you build it with?
 
 * webpack
