@@ -6,9 +6,9 @@ This is what happens when a developer gets obsessed with sewing. This is a proof
 
 ### What did you build it with?
 
-webpack
-three.js
-love (awwww I know, I'm just too much)
+* webpack
+* three.js
+* love (awwww I know, I'm just too much)
 
 ### What are the plans for the future
 The next iterations of this will work on changing up the interface to make it more efficient to use. This will include:
